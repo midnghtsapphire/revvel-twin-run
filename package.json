@@ -5,7 +5,8 @@
   "type": "module",
   "description": "Fable × Opus × Grok twin/trio runner with cheap spend, WR flags, DeepSeek via OpenRouter.",
   "scripts": {
-    "twins": "node src/run.mjs"
+    "twins": "node src/run.mjs",
+    "dark": "node src/dark-run.mjs"
   },
   "engines": {
     "node": ">=20"
