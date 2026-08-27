@@ -1,5 +1,9 @@
 # Revvel Twin Run
 
+
+<!-- AUTO-PACKAGE-BADGES:START -->
+
+<!-- AUTO-PACKAGE-BADGES:END -->
 Fable × Opus × Grok on **your** GitHub. Same runner as the workbench: two seats are twins, three is a trio, then a merge.
 
 Cheap is a spend switch. Set it in the UI, or in a WR:
