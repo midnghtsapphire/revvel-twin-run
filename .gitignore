@@ -5,3 +5,10 @@ node_modules/
 run.md
 *.log
 .DS_Store
+inbox/*.md
+inbox/*.txt
+!inbox/README.md
+inbox/done/
+inbox/failed/
+out/*
+!out/.gitkeep

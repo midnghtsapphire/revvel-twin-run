@@ -59,6 +59,14 @@ jobs:
       XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
 ```
 
+**When GitHub Actions is locked (Copilot billing, account lock):** do not wait on Actions. Use the dark path — same keys, laptop or DigitalOcean, no GitHub tools. See [DARK_PATH.md](DARK_PATH.md).
+
+```bash
+# .env holds OPENROUTER_API_KEY and XAI_API_KEY
+node src/dark-run.mjs          # drains inbox/
+node src/dark-run.mjs --watch  # keep draining
+```
+
 **Local:**
 
 ```bash
