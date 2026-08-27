@@ -1,7 +1,0 @@
-node_modules/
-.env
-.env.*
-!.env.example
-run.md
-*.log
-.DS_Store
