@@ -1,0 +1,32 @@
+name: Revvel Twin Run
+description: Run Fable / Opus / Grok twins or a trio. Cheap uses DeepSeek + a free seat when OpenRouter is set.
+author: midnghtsapphire
+inputs:
+  prompt:
+    description: Prompt. WR lines (spend / uncensored / pair) are parsed out of this text.
+    required: true
+  spend:
+    description: cheap or premium. Overridden by a spend: line in the prompt.
+    default: cheap
+  uncensored:
+    description: on or off
+    default: off
+  pair:
+    description: fable-opus-grok | fable-opus | fable-fable | opus-opus
+    default: fable-opus-grok
+  out:
+    description: Markdown output path
+    default: run.md
+runs:
+  using: composite
+  steps:
+    - name: Run twins
+      shell: bash
+      env:
+        PROMPT: ${{ inputs.prompt }}
+        SPEND: ${{ inputs.spend }}
+        UNCENSORED: ${{ inputs.uncensored }}
+        PAIR: ${{ inputs.pair }}
+        OPENROUTER_API_KEY: ${{ env.OPENROUTER_API_KEY }}
+        XAI_API_KEY: ${{ env.XAI_API_KEY }}
+      run: node "${{ github.action_path }}/src/run.mjs" --out "${{ inputs.out }}"

@@ -1,0 +1,13 @@
+{
+  "name": "revvel-twin-run",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Fable × Opus × Grok twin/trio runner with cheap spend, WR flags, DeepSeek via OpenRouter.",
+  "scripts": {
+    "twins": "node src/run.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

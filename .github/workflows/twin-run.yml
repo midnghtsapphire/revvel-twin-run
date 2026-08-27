@@ -1,0 +1,97 @@
+name: Twin Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: Prompt (WR lines spend / uncensored / pair are honoured)
+        required: true
+        type: string
+      spend:
+        description: Spend
+        type: choice
+        options: [cheap, premium]
+        default: cheap
+      uncensored:
+        description: Uncensored
+        type: choice
+        options: [off, on]
+        default: off
+      pair:
+        description: Pair
+        type: choice
+        options: [fable-opus-grok, fable-opus, fable-fable, opus-opus]
+        default: fable-opus-grok
+  workflow_call:
+    inputs:
+      prompt:
+        required: true
+        type: string
+      spend:
+        type: string
+        default: cheap
+      uncensored:
+        type: string
+        default: off
+      pair:
+        type: string
+        default: fable-opus-grok
+    secrets:
+      OPENROUTER_API_KEY:
+        required: false
+      XAI_API_KEY:
+        required: false
+  issues:
+    types: [opened, edited]
+  issue_comment:
+    types: [created]
+  pull_request:
+    types: [opened, edited]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  twins:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'workflow_call' ||
+      contains(github.event.comment.body, 'spend:') ||
+      contains(github.event.comment.body, 'CHEAP=') ||
+      contains(github.event.issue.body, 'spend:') ||
+      contains(github.event.issue.body, 'CHEAP=') ||
+      contains(github.event.pull_request.body, 'spend:') ||
+      contains(github.event.pull_request.body, 'CHEAP=')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run twins
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
+          PROMPT: ${{ inputs.prompt }}
+          SPEND: ${{ inputs.spend }}
+          UNCENSORED: ${{ inputs.uncensored }}
+          PAIR: ${{ inputs.pair }}
+          ISSUE_BODY: ${{ github.event.comment.body || github.event.issue.body || github.event.pull_request.body }}
+        run: node src/run.mjs --out run.md
+      - name: Comment on issue
+        if: github.event.issue.number
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" --body-file run.md
+      - name: Comment on pull request
+        if: github.event.pull_request.number
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr comment "${{ github.event.pull_request.number }}" --repo "${{ github.repository }}" --body-file run.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: twin-run
+          path: run.md
